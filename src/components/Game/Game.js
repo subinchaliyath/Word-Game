@@ -2,38 +2,54 @@ import React, { useState } from "react";
 
 import { sample } from "../../utils";
 import { WORDS } from "../../data";
+import { checkGuess } from "../../game-helpers";
 
 import Guess from "../Guess";
 import GuessSlot from "../GuessSlot";
-import Banner from "../Banner/Banner";
-
+import WonBanner from "../WonBanner";
+import LostBanner from "../LostBanner";
+import Keyboard from "../Keyboard";
 // Pick a random word on every pageload.
-const answer = sample(WORDS);
+// const answer = sample(WORDS);
 // To make debugging easier, we'll log the solution in the console.
-console.info({ answer });
 
 function Game() {
+  const [answer, setAnswer] = useState(() => sample(WORDS));
+  console.log(answer);
   const [guesses, setGuesses] = useState([]);
-  const [gameStatus, setGameStatus] = useState({});
-  const handleGuess = (guess) => {
-    const newGuess = { id: Math.random(), label: guess };
-    const nextGuesses = [...guesses, newGuess];
+  const [gameStatus, setGameStatus] = useState("running");
+
+  const handleSubmitGuess = (guess) => {
+    const nextGuesses = [...guesses, guess];
     setGuesses(nextGuesses);
     if (guess === answer) {
-      setGameStatus({ win: true, attempt: guesses.length, completed: "true" });
-    }
-    if (nextGuesses.length > 5) {
-      setGameStatus({ win: false, completed: "true", answer });
+      setGameStatus("won");
+    } else if (nextGuesses.length > 5) {
+      setGameStatus("lost");
     }
   };
+
+  function handleRestart() {
+    const newAnswer = sample(WORDS);
+    setAnswer(newAnswer);
+    setGuesses([]);
+    setGameStatus("running");
+  }
+  const validatedGuesses = guesses.map((guess) => checkGuess(guess, answer));
   return (
     <>
-      <GuessSlot guesses={guesses} answer={answer} />
+      <GuessSlot validatedGuesses={validatedGuesses} answer={answer} />
       <Guess
-        handleGuess={handleGuess}
+        handleSubmitGuess={handleSubmitGuess}
         disabled={gameStatus?.completed ? true : false}
       />
-      {gameStatus?.completed && <Banner gameStatus={gameStatus} />}
+      <Keyboard validatedGuesses={validatedGuesses} />
+      {gameStatus === "won" && (
+        <WonBanner handleRestart={handleRestart} attempt={guesses.length} />
+      )}
+      {gameStatus === "lost" && (
+        <LostBanner handleRestart={handleRestart} answer={answer} />
+      )}
     </>
   );
 }
