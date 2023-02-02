@@ -8,7 +8,6 @@ import Guess from "../Guess";
 import GuessSlot from "../GuessSlot";
 import WonBanner from "../WonBanner";
 import LostBanner from "../LostBanner";
-import Keyboard from "../Keyboard";
 // Pick a random word on every pageload.
 // const answer = sample(WORDS);
 // To make debugging easier, we'll log the solution in the console.
@@ -42,8 +41,8 @@ function Game() {
       <Guess
         handleSubmitGuess={handleSubmitGuess}
         disabled={gameStatus?.completed ? true : false}
+        validatedGuesses={validatedGuesses}
       />
-      <Keyboard validatedGuesses={validatedGuesses} />
       {gameStatus === "won" && (
         <WonBanner handleRestart={handleRestart} attempt={guesses.length} />
       )}

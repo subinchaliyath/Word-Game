@@ -96,6 +96,20 @@ h1 {
   margin-bottom: 4px;
 }
 
+.guess-submit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.guess-submit button {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  margin-left: 5px;
+  height: 100%;
+  border: 1px solid var(--color-gray-100);
+}
+
 .cell {
   position: relative;
   width: 20%;
