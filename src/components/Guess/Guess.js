@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 
 import Keyboard from "../Keyboard";
+import Modal from "../Modal";
 
 function Guess({ handleSubmitGuess, disabled, validatedGuesses }) {
   const [guess, setGuess] = useState("");
+  const [show, setShow] = useState(false);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (guess.length === 5) {
@@ -11,7 +14,7 @@ function Guess({ handleSubmitGuess, disabled, validatedGuesses }) {
       setGuess("");
       return;
     }
-    window.alert("please enter 5 letter word");
+    setShow(true);
   };
   return (
     <>
@@ -33,7 +36,16 @@ function Guess({ handleSubmitGuess, disabled, validatedGuesses }) {
           <button type="submit">Submit</button>
         </div>
       </form>
-      <Keyboard validatedGuesses={validatedGuesses} setGuess={setGuess} guess={guess}/>
+      <Keyboard
+        validatedGuesses={validatedGuesses}
+        setGuess={setGuess}
+        guess={guess}
+      />
+      {show && (
+        <Modal setShow={setShow}>
+          <h5>please enter a 5 letter word</h5>
+        </Modal>
+      )}
     </>
   );
 }

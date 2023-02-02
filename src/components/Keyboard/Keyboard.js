@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import Modal from "../Modal";
 
 const ROWS = [
   ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"],
@@ -19,6 +20,8 @@ function getStatusByLetter(validatedGuesses) {
 }
 
 const Keyboard = ({ validatedGuesses, setGuess, guess }) => {
+  const [show, setShow] = useState(false);
+
   let statusByLetter = getStatusByLetter(validatedGuesses);
 
   return (
@@ -31,7 +34,7 @@ const Keyboard = ({ validatedGuesses, setGuess, guess }) => {
               className={`letter ${statusByLetter[letter]}`}
               onClick={() => {
                 if (guess.length >= 5) {
-                  window.alert("please enter 5 letter word");
+                  setShow(true);
                   return;
                 }
                 setGuess(guess + letter.toUpperCase());
@@ -42,6 +45,11 @@ const Keyboard = ({ validatedGuesses, setGuess, guess }) => {
           ))}
         </div>
       ))}
+      {show && (
+        <Modal setShow={setShow}>
+          <h5>please enter a 5 letter word</h5>
+        </Modal>
+      )}
     </div>
   );
 };
